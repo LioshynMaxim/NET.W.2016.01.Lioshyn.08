@@ -9,10 +9,9 @@ namespace Task1
 {
     public class Customer : IFormattable
     {
-
-        public string Name { get; private set; }
-        public string ContactPhone { get; private set; }
-        public decimal Revenue { get; private set; }
+        public string Name { get; }
+        public string ContactPhone { get; }
+        public decimal Revenue { get; }
 
         /// <summary>
         /// .ctor
@@ -42,6 +41,16 @@ namespace Task1
         /// <summary>
         /// Override ToString in invariant Culture
         /// </summary>
+        /// <returns>String line in invariant Culture</returns>
+
+        public override string ToString()
+        {
+            return ToString("G", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Override ToString in invariant Culture
+        /// </summary>
         /// <param name="format">format show classes</param>
         /// <param name="formatProvider"></param>
         /// <returns>String line in invariant Culture</returns>
@@ -51,37 +60,25 @@ namespace Task1
             if (format == null)
                 throw new ArgumentNullException();
 
+            if (format == "")
+                format = "G";
+
             format = format.ToUpperInvariant();
 
             switch (format)
             {
-                case "":
+                case "G":
                     return Name;
-                case "NAME":
+                case "N":
                     return Name;
-                case "PHONE":
+                case "P":
                     return ContactPhone;
-                case "REVENUE":
+                case "R":
                     return Revenue.ToString("F");
-
-                case "NP":
-                    return Name + " " + ContactPhone;
                 case "NR":
-                    return Name + " " + Revenue.ToString("F");
-
-                //case "PN":
-                //    return ContactPhone + " " + Name;
-                //case "PR":
-                //    return ContactPhone + " " + Revenue.ToString("F");
-
-                case "RN":
-                    return Revenue.ToString("C") + " " + Name;
-                case "RP":
-                    return Revenue.ToString("C") + " " + ContactPhone;
-
+                    return Name + " " + Revenue.ToString("C", formatProvider);
                 case "NPR":
-                    return Name + " " + ContactPhone + " " + Revenue.ToString("F");
-
+                    return Name + " " + ContactPhone + " " + Revenue.ToString("C", formatProvider);
                 default:
                     throw new FormatException($"Bad format {format}. Atatata");
             }
